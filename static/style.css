@@ -1,10 +1,19 @@
 * {
-  background: none !important;
-  background-color: #fdd000 !important;
+    background: #fdd000 !important;
 }
 
-html, body, .container, .main-content, .app, .background, .wrapper, .page-bg {
-    background-color: #fdd000 !important;
+html, body {
+    min-height: 100vh !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#app, .container, .container-fluid {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100vw !important;
+    width: 100vw !important;
 }
 
 /* 額外樣式 */
@@ -202,4 +211,16 @@ html, body, .container, .main-content, .app, .background, .wrapper, .page-bg {
 
 h1, h2, h3, .main-title {
     color: #fdd000;
+}
+
+.container {
+    margin: 0 !important;
+    max-width: 100vw !important;
+    width: 100vw !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.main-container {
+    margin: 2rem auto !important;
 } 

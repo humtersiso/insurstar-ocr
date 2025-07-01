@@ -1,0 +1,205 @@
+* {
+  background: none !important;
+  background-color: #fdd000 !important;
+}
+
+html, body, .container, .main-content, .app, .background, .wrapper, .page-bg {
+    background-color: #fdd000 !important;
+}
+
+/* 額外樣式 */
+.custom-file-upload {
+    display: inline-block;
+    cursor: pointer;
+    padding: 10px 20px;
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    color: white;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.custom-file-upload:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+}
+
+.file-info {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-left: 4px solid #3498db;
+}
+
+.processing-steps {
+    display: flex;
+    justify-content: space-between;
+    margin: 2rem 0;
+}
+
+.step {
+    text-align: center;
+    flex: 1;
+    position: relative;
+}
+
+.step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    right: -50%;
+    width: 100%;
+    height: 2px;
+    background: #ecf0f1;
+    z-index: 1;
+}
+
+.step.active::after {
+    background: #3498db;
+}
+
+.step-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ecf0f1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.step.active .step-icon {
+    background: #3498db;
+    color: white;
+}
+
+.step.completed .step-icon {
+    background: #27ae60;
+    color: white;
+}
+
+.step-label {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+.step.active .step-label {
+    color: #3498db;
+    font-weight: bold;
+}
+
+.step.completed .step-label {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+.data-table th,
+.data-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.data-table th {
+    background: #f8f9fa;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.data-table tr:hover {
+    background: #f8f9fa;
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+.status-success {
+    background: #27ae60;
+}
+
+.status-warning {
+    background: #f39c12;
+}
+
+.status-error {
+    background: #e74c3c;
+}
+
+.tooltip-custom {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip-custom .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip-custom:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        margin: 1rem;
+        padding: 1rem;
+    }
+    
+    .upload-area {
+        padding: 2rem 1rem;
+    }
+    
+    .upload-icon {
+        font-size: 3rem;
+    }
+    
+    .processing-steps {
+        flex-direction: column;
+    }
+    
+    .step:not(:last-child)::after {
+        display: none;
+    }
+    
+    .step {
+        margin-bottom: 1rem;
+    }
+}
+
+/* 若有表格、主要區塊、按鈕等主色調，也一併調整 */
+.table-main, .main-header, .btn-primary {
+    background-color: #fdd000;
+    border-color: #fdd000;
+    color: #333;
+}
+
+h1, h2, h3, .main-title {
+    color: #fdd000;
+} 

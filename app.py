@@ -1,16 +1,18 @@
 import os
 import uuid
 from datetime import datetime
-from flask import Flask, request, jsonify, render_template, send_file
+from flask import Flask, request, jsonify, render_template, send_file, send_from_directory
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import tempfile
 import shutil
 import json
+import time
 
 from gemini_ocr_processor import GeminiOCRProcessor
-from pdf_filler import PDFFiller
 from data_processor import DataProcessor
+from image_processing import ImageProcessing
+from word_filler import WordFiller
 
 app = Flask(__name__)
 CORS(app)
@@ -25,10 +27,27 @@ app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'pdf', 'tiff', 'bmp'}
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['OUTPUT_FOLDER'], exist_ok=True)
 
+# 建立暫存圖片資料夾
+TEMP_PREVIEW_FOLDER = os.path.join(os.path.dirname(__file__), 'temp_previews')
+os.makedirs(TEMP_PREVIEW_FOLDER, exist_ok=True)
+
+# 啟動時自動清理 temp_previews 資料夾下所有檔案
+def cleanup_temp_previews_on_start(folder):
+    for filename in os.listdir(folder):
+        file_path = os.path.join(folder, filename)
+        if os.path.isfile(file_path):
+            try:
+                os.remove(file_path)
+            except Exception as e:
+                print(f"刪除暫存檔案失敗: {file_path} - {e}")
+
+cleanup_temp_previews_on_start(TEMP_PREVIEW_FOLDER)
+
 # 初始化處理器
 ocr_processor = GeminiOCRProcessor()  # 使用 Gemini OCR
-pdf_filler = PDFFiller()
 data_processor = DataProcessor()
+image_processor = ImageProcessing(output_dir=TEMP_PREVIEW_FOLDER)
+word_filler = WordFiller()  # Word 填寫系統
 
 def allowed_file(filename):
     """檢查檔案格式是否允許"""
@@ -73,58 +92,34 @@ def upload_file():
         # 保存上傳的檔案
         file.save(upload_path)
         
-        # 執行OCR處理
-        print(f"開始處理檔案: {upload_path}")
-        
         # 處理 PDF 轉圖片
-        image_path = upload_path
-        if file_ext.lower() == 'pdf':
-            print("檢測到 PDF 檔案，轉換為圖片...")
-            from pdf_to_images import PDFToImageConverter
-            
-            try:
-                # 初始化轉換器
-                converter = PDFToImageConverter()
-                
-                # 轉換 PDF 第一頁為圖片
-                images = converter.convert_pdf_to_images(upload_path, pages=[0])  # 只轉換第一頁
-                if images:
-                    image_path = images[0]  # 使用第一頁
-                    print(f"PDF 轉換成功: {image_path}")
-                else:
-                    raise Exception("PDF 轉換失敗，沒有生成圖片")
-            except Exception as e:
-                print(f"PDF 轉換錯誤: {str(e)}")
-                cleanup_temp_files([upload_path])
-                return jsonify({'error': f'PDF 轉換失敗: {str(e)}'}), 500
+        images = image_processor.pdf_to_images(upload_path, pages=[0])
+        if images:
+            image_path = images[0]
+        else:
+            cleanup_temp_files([upload_path])
+            return jsonify({'error': 'PDF 轉換失敗'}), 500
+        
+        # 保存原始圖片到暫存資料夾（用於預覽）
+        base_name = os.path.splitext(os.path.basename(image_path))[0]
+        original_preview_path = os.path.join(TEMP_PREVIEW_FOLDER, f"{base_name}_original.png")
+        shutil.copy2(image_path, original_preview_path)
+        original_preview_url = f"/temp_previews/{os.path.basename(original_preview_path)}"
+        
+        # 疊加輔助線到圖片上（存到暫存資料夾，用於OCR）
+        overlay_image_path = os.path.join(TEMP_PREVIEW_FOLDER, f"{base_name}_with_overlay.png")
+        image_with_overlay = image_processor.overlay_table_lines(image_path, output_path=overlay_image_path)
+        overlay_preview_url = f"/temp_previews/{os.path.basename(image_with_overlay)}"
         
         # 分析圖片品質
-        quality_info = ocr_processor.analyze_image_quality(image_path)
+        quality_info = ocr_processor.analyze_image_quality(image_with_overlay)
         print(f"圖片品質分析: {quality_info}")
         
         # 使用 Gemini 提取保單資料
-        raw_data = ocr_processor.extract_insurance_data_with_gemini(image_path)
+        raw_data = ocr_processor.extract_insurance_data_with_gemini(image_with_overlay)
         print('=== raw_data ===')
         print(json.dumps(raw_data, ensure_ascii=False, indent=2))
         print('================')
-        
-        # 如果是轉換的圖片，清理暫存圖片
-        if image_path != upload_path:
-            cleanup_temp_files([image_path])
-        
-        # 檢查是否成功提取資料
-        if not raw_data:
-            print("❌ 未能提取到任何資料")
-            cleanup_temp_files([upload_path])
-            return jsonify({
-                'error': '無法從檔案中提取保單資料，請確認檔案品質或格式',
-                'suggestions': [
-                    '請確認檔案是清晰的保單圖片或 PDF',
-                    '檔案解析度建議至少 300 DPI',
-                    '文字應清晰可讀，避免模糊或傾斜',
-                    '支援格式：PNG, JPG, PDF, TIFF, BMP'
-                ]
-            }), 400
         
         # 資料處理和驗證
         processed_data = data_processor.process_insurance_data(raw_data)
@@ -136,19 +131,6 @@ def upload_file():
         print('====================================')
         validation_result = data_processor.validate_processed_data(processed_data)
         
-        # 生成PDF檔案
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        pdf_filename = f"insurance_form_{file_id}_{timestamp}.pdf"
-        pdf_path = os.path.join(app.config['OUTPUT_FOLDER'], pdf_filename)
-        
-        # 建立PDF表單
-        pdf_filler.create_insurance_form(processed_data, pdf_path)
-        
-        # 生成摘要報告
-        report_filename = f"summary_report_{file_id}_{timestamp}.pdf"
-        report_path = os.path.join(app.config['OUTPUT_FOLDER'], report_filename)
-        pdf_filler.create_summary_report(processed_data, validation_result, report_path)
-        
         # 準備回應資料
         response_data = {
             'file_id': file_id,
@@ -156,13 +138,20 @@ def upload_file():
             'extracted_data': processed_data,
             'validation_result': validation_result,
             'data_summary': data_processor.get_data_summary(processed_data),
-            'pdf_filename': pdf_filename,
-            'report_filename': report_filename,
-            'processing_time': datetime.now().isoformat()
+            'processing_time': datetime.now().isoformat(),
+            'original_preview_image_url': original_preview_url,
+            'overlay_preview_image_url': overlay_preview_url
         }
         
-        # 清理上傳的檔案
-        cleanup_temp_files([upload_path])
+        # 清理暫存檔案（但不清理 overlay 圖片，讓前端可以預覽）
+        temp_files_to_clean = [upload_path]
+        if image_path != upload_path:
+            temp_files_to_clean.append(image_path)
+        # 暫時不清理 overlay 圖片，讓前端可以預覽
+        # if image_with_overlay != image_path:
+        #     temp_files_to_clean.append(image_with_overlay)
+        
+        cleanup_temp_files(temp_files_to_clean)
         
         return jsonify(response_data)
         
@@ -170,17 +159,7 @@ def upload_file():
         print(f"處理錯誤: {str(e)}")
         return jsonify({'error': f'處理失敗: {str(e)}'}), 500
 
-@app.route('/download/<filename>')
-def download_file(filename):
-    """下載生成的PDF檔案"""
-    try:
-        file_path = os.path.join(app.config['OUTPUT_FOLDER'], filename)
-        if os.path.exists(file_path):
-            return send_file(file_path, as_attachment=True)
-        else:
-            return jsonify({'error': '檔案不存在'}), 404
-    except Exception as e:
-        return jsonify({'error': f'下載失敗: {str(e)}'}), 500
+
 
 @app.route('/api/process', methods=['POST'])
 def api_process():
@@ -201,19 +180,10 @@ def api_process():
         processed_data = data_processor.process_insurance_data(raw_data)
         validation_result = data_processor.validate_processed_data(processed_data)
         
-        # 生成PDF
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        pdf_filename = f"insurance_form_{timestamp}.pdf"
-        pdf_path = os.path.join(app.config['OUTPUT_FOLDER'], pdf_filename)
-        
-        pdf_filler.create_insurance_form(processed_data, pdf_path)
-        
         return jsonify({
             'success': True,
             'extracted_data': processed_data,
-            'validation_result': validation_result,
-            'pdf_path': pdf_path,
-            'pdf_filename': pdf_filename
+            'validation_result': validation_result
         })
         
     except Exception as e:
@@ -227,6 +197,46 @@ def health_check():
         'timestamp': datetime.now().isoformat(),
         'version': '1.0.0'
     })
+
+@app.route('/api/generate-word', methods=['POST'])
+def generate_word():
+    """生成 Word 檔案"""
+    try:
+        data = request.get_json()
+        
+        if not data or 'image_path' not in data:
+            return jsonify({'error': '缺少必要參數'}), 400
+        
+        image_path = data['image_path']
+        
+        if not os.path.exists(image_path):
+            return jsonify({'error': '圖片檔案不存在'}), 404
+        
+        # 使用 Word 填寫系統處理
+        result = word_filler.process_insurance_document(image_path)
+        
+        if result['success']:
+            return jsonify({
+                'success': True,
+                'word_filename': result['word_filename'],
+                'word_path': result['word_path'],
+                'download_url': f"/download/{result['word_filename']}",
+                'data_summary': result['data_summary'],
+                'validation_result': result['validation_result']
+            })
+        else:
+            return jsonify({'error': result['error']}), 500
+        
+    except Exception as e:
+        return jsonify({'error': f'Word 生成失敗: {str(e)}'}), 500
+
+@app.route('/download/<filename>')
+def download_file(filename):
+    """下載檔案"""
+    try:
+        return send_from_directory(app.config['OUTPUT_FOLDER'], filename, as_attachment=True)
+    except Exception as e:
+        return jsonify({'error': f'下載失敗: {str(e)}'}), 404
 
 @app.route('/api/analyze', methods=['POST'])
 def analyze_image():
@@ -270,6 +280,10 @@ def analyze_image():
         
     except Exception as e:
         return jsonify({'error': f'分析失敗: {str(e)}'}), 500
+
+@app.route('/temp_previews/<path:filename>')
+def temp_previews(filename):
+    return send_from_directory(TEMP_PREVIEW_FOLDER, filename)
 
 @app.errorhandler(413)
 def too_large(e):

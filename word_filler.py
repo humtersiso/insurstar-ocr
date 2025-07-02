@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-PDF 填寫系統
-整合 Gemini OCR 辨識結果與財產分析書生成
+Word 填寫系統
+整合 Gemini OCR 辨識結果與 Word 模板生成
 """
 
 import os
@@ -13,16 +13,16 @@ from typing import Dict, List, Any, Optional
 
 from gemini_ocr_processor import GeminiOCRProcessor
 from data_processor import DataProcessor
-from property_analysis_generator import PropertyAnalysisGenerator
+from word_template_generator import WordTemplateGenerator
 
-class PDFFiller:
-    """PDF 填寫系統"""
+class WordFiller:
+    """Word 填寫系統"""
     
     def __init__(self):
-        """初始化 PDF 填寫系統"""
+        """初始化 Word 填寫系統"""
         self.ocr_processor = GeminiOCRProcessor()
         self.data_processor = DataProcessor()
-        self.pdf_generator = PropertyAnalysisGenerator()
+        self.word_generator = WordTemplateGenerator()
         
         # 建立輸出目錄
         self.output_dir = 'outputs'
@@ -30,7 +30,7 @@ class PDFFiller:
     
     def process_insurance_document(self, image_path: str) -> Dict:
         """
-        處理保險文件：OCR 辨識 + PDF 生成
+        處理保險文件：OCR 辨識 + Word 生成
         
         Args:
             image_path: 圖片路徑
@@ -62,36 +62,36 @@ class PDFFiller:
             print("✅ 資料處理完成")
             print(f"📊 處理後資料: {json.dumps(processed_data, ensure_ascii=False, indent=2)}")
             
-            # 3. 生成 PDF
-            print("📄 生成財產分析書...")
+            # 3. 生成 Word 檔案
+            print("📄 生成 Word 檔案...")
             file_id = str(uuid.uuid4())
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            pdf_filename = f"property_analysis_{file_id}_{timestamp}.pdf"
-            pdf_path = os.path.join(self.output_dir, pdf_filename)
+            word_filename = f"property_analysis_{file_id}_{timestamp}.docx"
+            word_path = os.path.join(self.output_dir, word_filename)
             
-            pdf_result = self.pdf_generator.generate_property_analysis(processed_data, pdf_path)
+            word_result = self.word_generator.create_property_analysis_docx(processed_data, word_path)
             
-            if not pdf_result:
+            if not word_result:
                 return {
                     'success': False,
-                    'error': 'PDF 生成失敗'
+                    'error': 'Word 檔案生成失敗'
                 }
             
-            print("✅ PDF 生成完成")
+            print("✅ Word 檔案生成完成")
             
             # 4. 準備回應資料
             result = {
                 'success': True,
                 'file_id': file_id,
                 'original_image': image_path,
-                'pdf_path': pdf_path,
-                'pdf_filename': pdf_filename,
+                'word_path': word_path,
+                'word_filename': word_filename,
                 'raw_data': raw_data,
                 'processed_data': processed_data,
                 'validation_result': validation_result,
                 'data_summary': self.data_processor.get_data_summary(processed_data),
                 'processing_time': datetime.now().isoformat(),
-                'download_url': f"/download/{pdf_filename}"
+                'download_url': f"/download/{word_filename}"
             }
             
             print("🎉 文件處理完成！")
@@ -164,17 +164,17 @@ class PDFFiller:
             'failed_documents': failed,
             'success_rate': f"{successful / total * 100:.1f}%" if total > 0 else "0%",
             'average_extraction_rate': f"{avg_extraction_rate:.1f}%",
-            'generated_pdfs': [r['pdf_filename'] for r in results if r['success']],
+            'generated_files': [r['word_filename'] for r in results if r['success']],
             'errors': [r['error'] for r in results if not r['success']]
         }
 
 def main():
     """測試函數"""
-    print("📄 PDF 填寫系統測試")
+    print("📄 Word 填寫系統測試")
     print("=" * 50)
     
     # 初始化系統
-    pdf_filler = PDFFiller()
+    word_filler = WordFiller()
     
     # 檢查測試圖片
     test_images = []
@@ -192,13 +192,14 @@ def main():
     print(f"📸 測試圖片: {test_image}")
     
     # 處理文件
-    result = pdf_filler.process_insurance_document(test_image)
+    result = word_filler.process_insurance_document(test_image)
     
     if result['success']:
         print(f"✅ 處理成功！")
-        print(f"📄 PDF 檔案: {result['pdf_filename']}")
+        print(f"📄 Word 檔案: {result['word_filename']}")
         print(f"📊 資料摘要: {result['data_summary']}")
         print(f"🔍 驗證結果: {result['validation_result']}")
+        print(f"📝 請用 Microsoft Word 或 LibreOffice 開啟檢查內容")
     else:
         print(f"❌ 處理失敗: {result['error']}")
 

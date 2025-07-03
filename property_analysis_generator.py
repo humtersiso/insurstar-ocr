@@ -348,8 +348,8 @@ def main():
     }
     
     # 生成財產分析書
-    output_path = 'outputs/test_property_analysis.pdf'
-    os.makedirs('outputs', exist_ok=True)
+    output_path = 'property_reports/test_property_analysis.pdf'
+    os.makedirs('property_reports', exist_ok=True)
     
     try:
         result_path = generator.generate_property_analysis(test_data, output_path)

@@ -19,7 +19,7 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             margin: 2rem auto;
             padding: 2rem;
-            max-width: 1200px;
+            max-width: 1800px;
         }
         
         .header {
@@ -163,27 +163,7 @@
             font-weight: 500;
         }
         
-        .validation-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-        
-        .validation-success {
-            background: #d4edda;
-            color: #155724;
-        }
-        
-        .validation-warning {
-            background: #fff3cd;
-            color: #856404;
-        }
-        
-        .validation-error {
-            background: #f8d7da;
-            color: #721c24;
-        }
+
         
         .alert {
             border-radius: 15px;
@@ -362,6 +342,10 @@
             font-size: 16px;
             font-weight: bold;
         }
+        
+        #previewImageContainer img {
+            background: #fff;
+        }
     </style>
 </head>
 <body>
@@ -414,7 +398,7 @@
                         </div>
                         
                         <!-- Word 生成按鈕 -->
-                        <div class="data-card">
+                        <!-- <div class="data-card">
                             <h5><i class="fas fa-file-word"></i> 文件生成</h5>
                             <div class="d-flex gap-2">
                                 <button class="btn btn-success" id="generateWordButton" onclick="generateWord()" disabled>
@@ -425,7 +409,7 @@
                                 </button>
                             </div>
                             <div id="wordStatus" class="mt-2"></div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-md-4">
                         <div class="data-card">
@@ -433,9 +417,13 @@
                             <div id="dataSummary"></div>
                         </div>
                         
+
+                        
+
+                        
                         <div class="data-card">
-                            <h5><i class="fas fa-check-circle"></i> 驗證結果</h5>
-                            <div id="validationResult"></div>
+                            <h5><i class="fas fa-exclamation-triangle"></i> 提醒事項</h5>
+                            <div id="remindersInfo"></div>
                         </div>
                     </div>
                 </div>
@@ -479,6 +467,7 @@
         let currentPreviewImageUrl = null;
         let currentOriginalImageUrl = null;
         let currentWordFile = null;
+        let currentFileId = null;
 
         // DOM元素
         const uploadArea = document.getElementById('uploadArea');
@@ -615,22 +604,16 @@
             processingResult = data;
             currentPreviewImageUrl = data.overlay_preview_image_url;
             currentOriginalImageUrl = data.original_preview_image_url;
+            currentFileId = data.file_id;
             hideProgress();
             displayExtractedData(data.extracted_data);
             displayDataSummary(data.data_summary);
-            displayValidationResult(data.validation_result);
-            
+
+            displayRemindersInfo(data.reminders);
             // 啟用圖片預覽按鈕
             const previewButton = document.getElementById('previewButton');
-            if (currentPreviewImageUrl) {
-                previewButton.disabled = false;
-                previewButton.innerHTML = '<i class="fas fa-image"></i> 圖片預覽';
-            }
-            
-            // 啟用 Word 生成按鈕
-            const generateWordButton = document.getElementById('generateWordButton');
-            generateWordButton.disabled = false;
-            
+            previewButton.disabled = false;
+            previewButton.innerHTML = '<i class="fas fa-image"></i> 圖片預覽';
             resultContainer.style.display = 'block';
         }
 
@@ -641,11 +624,30 @@
 
         // 顯示圖片預覽
         function showImagePreview() {
-            if (currentPreviewImageUrl) {
-                openImageModal(currentPreviewImageUrl);
-            } else {
+            if (!currentFile) {
                 showAlert('提示', '尚未有可預覽的圖片，請先上傳檔案', 'info');
+                return;
             }
+            if (!currentOriginalImageUrl || !currentFileId) {
+                showAlert('提示', '找不到原始圖片路徑或 file_id', 'info');
+                return;
+            }
+            fetch('/api/preview', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image_path: currentOriginalImageUrl, file_id: currentFileId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.preview_url) {
+                    openImageModal(data.preview_url);
+                } else {
+                    showAlert('錯誤', data.error || '預覽產生失敗', 'danger');
+                }
+            })
+            .catch(error => {
+                showAlert('錯誤', '預覽產生失敗: ' + error.message, 'danger');
+            });
         }
 
         // 開啟圖片彈框
@@ -697,7 +699,9 @@
                 'vehicle_type': '車輛種類',
                 'license_number': '牌照號碼',
                 'coverage_items': '承保內容',
-                'total_premium': '總保險費'
+                'total_premium': '總保險費',
+                'compulsory_insurance_period': '強制險保期',
+                'optional_insurance_period': '任意險保期'
             };
 
             // 定義欄位顯示順序
@@ -716,8 +720,10 @@
                 'policyholder_birth_date',
                 'vehicle_type',
                 'license_number',
-                'coverage_items',
-                'total_premium'
+                'total_premium',
+                'compulsory_insurance_period',
+                'optional_insurance_period',
+                'coverage_items'
             ];
 
             let html = '';
@@ -730,10 +736,15 @@
                     if (key === 'coverage_items') {
                         value = formatCoverageItems(value);
                     }
+                    // 判斷是否為「無填寫」
+                    let valueClass = 'field-value';
+                    if (typeof value === 'string' && value.trim() === '無填寫') {
+                        valueClass += ' text-danger';
+                    }
                     html += `
                         <div class="data-field">
                             <span class="field-label">${label}:</span>
-                            <span class="field-value">${value}</span>
+                            <span class="${valueClass}">${value}</span>
                         </div>
                     `;
                 }
@@ -772,15 +783,30 @@
                 // 處理子項目
                 if (Array.isArray(item.sub_items)) {
                     item.sub_items.forEach(sub => {
-                        tableHtml += `
-                            <tr class="sub-item-row">
-                                <td></td>
-                                <td>└ ${sub['保險種類'] || ''}</td>
-                                <td>${sub['保險金額'] || ''}</td>
-                                <td>${sub['自負額'] || ''}</td>
-                                <td>${sub['簽單保費'] || ''}</td>
-                            </tr>
-                        `;
+                        // 處理子項目可能是字串或物件的情況
+                        let subText = '';
+                        let subAmount = '';
+                        let subDeductible = '';
+                        let subPremium = '';
+                        if (typeof sub === 'string') {
+                            subText = sub;
+                        } else if (sub && typeof sub === 'object') {
+                            subText = sub['保險種類'] || sub['item_name'] || '';
+                            subAmount = sub['保險金額'] || '';
+                            subDeductible = sub['自負額'] || '';
+                            subPremium = sub['簽單保費'] || '';
+                        }
+                        if (subText) {
+                            tableHtml += `
+                                <tr class="sub-item-row">
+                                    <td></td>
+                                    <td>└ ${subText}</td>
+                                    <td>${subAmount}</td>
+                                    <td>${subDeductible}</td>
+                                    <td>${subPremium}</td>
+                                </tr>
+                            `;
+                        }
                     });
                 }
             });
@@ -807,66 +833,40 @@
             `;
         }
 
-        // 顯示驗證結果
-        function displayValidationResult(validation) {
-            const container = document.getElementById('validationResult');
-            let badgeClass = 'validation-success';
-            let badgeText = '驗證通過';
-            let icon = 'fas fa-check-circle';
 
-            if (!validation.is_valid) {
-                badgeClass = 'validation-error';
-                badgeText = '需要改善';
-                icon = 'fas fa-exclamation-triangle';
-            } else if (validation.warnings && validation.warnings.length > 0) {
-                badgeClass = 'validation-warning';
-                badgeText = '有建議';
-                icon = 'fas fa-info-circle';
+
+
+
+        // 顯示提醒事項
+        function displayRemindersInfo(reminders) {
+            const container = document.getElementById('remindersInfo');
+            if (!reminders || reminders.length === 0) {
+                container.innerHTML = '<div class="text-success"><i class="fas fa-check-circle"></i> 無需特別提醒</div>';
+                return;
             }
 
-            let html = `
-                <div class="text-center mb-3">
-                    <span class="validation-badge ${badgeClass}">
-                        <i class="${icon}"></i> ${badgeText}
-                    </span>
-                </div>
-            `;
+            let html = '';
+            reminders.forEach(reminder => {
+                let iconClass = 'fas fa-info-circle';
+                let textClass = 'text-info';
+                
+                if (reminder.includes('沒有辨識到') || reminder.includes('未辨識到')) {
+                    iconClass = 'fas fa-exclamation-triangle';
+                    textClass = 'text-warning';
+                } else if (reminder.includes('所有保險項目和保期都已成功辨識')) {
+                    iconClass = 'fas fa-check-circle';
+                    textClass = 'text-success';
+                } else if (reminder.includes('無法產生預覽圖')) {
+                    iconClass = 'fas fa-times-circle';
+                    textClass = 'text-danger';
+                }
 
-            // 顯示建議（正面訊息）
-            if (validation.suggestions && validation.suggestions.length > 0) {
-                html += '<div class="text-success mb-2"><strong><i class="fas fa-thumbs-up"></i> 狀態:</strong><br>';
-                validation.suggestions.forEach(suggestion => {
-                    html += `• ${suggestion}<br>`;
-                });
-                html += '</div>';
-            }
-
-            // 顯示缺失欄位
-            if (validation.missing_fields && validation.missing_fields.length > 0) {
-                html += '<div class="text-warning mb-2"><strong><i class="fas fa-exclamation-circle"></i> 未辨識欄位:</strong><br>';
-                validation.missing_fields.forEach(field => {
-                    html += `• 承保內容<br>`;
-                });
-                html += '</div>';
-            }
-
-            // 顯示格式警告
-            if (validation.warnings && validation.warnings.length > 0) {
-                html += '<div class="text-info mb-2"><strong><i class="fas fa-info-circle"></i> 格式提醒:</strong><br>';
-                validation.warnings.forEach(warning => {
-                    html += `• ${warning}<br>`;
-                });
-                html += '</div>';
-            }
-
-            // 顯示錯誤（如果有）
-            if (validation.errors && validation.errors.length > 0) {
-                html += '<div class="text-danger mb-2"><strong><i class="fas fa-times-circle"></i> 錯誤:</strong><br>';
-                validation.errors.forEach(error => {
-                    html += `• ${error}<br>`;
-                });
-                html += '</div>';
-            }
+                html += `
+                    <div class="${textClass} mb-2">
+                        <i class="${iconClass}"></i> ${reminder}
+                    </div>
+                `;
+            });
 
             container.innerHTML = html;
         }

@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 class PDFToImageConverter:
     """PDF 轉圖片轉換器"""
     
-    def __init__(self, output_dir: str = "converted_images"):
+    def __init__(self, output_dir: str = "temp_images"):
         """
         初始化轉換器
         
@@ -202,7 +202,7 @@ def main():
     converter = PDFToImageConverter()
     
     # 檢查 insurtech_data 目錄
-    pdf_dir = "insurtech_data"
+    pdf_dir = "assets"
     if not os.path.exists(pdf_dir):
         print(f"❌ 找不到 {pdf_dir} 目錄")
         return

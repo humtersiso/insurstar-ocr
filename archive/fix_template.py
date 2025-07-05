@@ -34,9 +34,37 @@ def fix_template_syntax():
                             print(f"🔧 修復空標記: {paragraph.text}")
                             paragraph.text = paragraph.text.replace("{{}}", "{{gender}}")
                         
+                        # 修復新加的浮水印標記
+                        text = paragraph.text
+                        # 修復 watermark_name_blue 標記
+                        if "{{watermark_name_blue}}" in text:
+                            # 檢查是否被拆開
+                            if "{{watermark_" in text and "name_blue}}" in text and "{{watermark_name_blue}}" not in text:
+                                print(f"🔧 修復拆開的標記: watermark_name_blue")
+                                text = text.replace("{{watermark_", "").replace("name_blue}}", "")
+                                text = text.replace("{{", "{{watermark_name_blue}}")
+                                paragraph.text = text
+                        
+                        # 修復 watermark_company_blue 標記
+                        if "{{watermark_company_blue}}" in text:
+                            # 檢查是否被拆開
+                            if "{{watermark_" in text and "company_blue}}" in text and "{{watermark_company_blue}}" not in text:
+                                print(f"🔧 修復拆開的標記: watermark_company_blue")
+                                text = text.replace("{{watermark_", "").replace("company_blue}}", "")
+                                text = text.replace("{{", "{{watermark_company_blue}}")
+                                paragraph.text = text
+                        
+                        # 修復 PCN 標記
+                        if "{{PCN}}" in text:
+                            # 檢查是否被拆開
+                            if "{{P" in text and "CN}}" in text and "{{PCN}}" not in text:
+                                print(f"🔧 修復拆開的標記: PCN")
+                                text = text.replace("{{P", "").replace("CN}}", "")
+                                text = text.replace("{{", "{{PCN}}")
+                                paragraph.text = text
+                        
                         # 修復其他可能的語法問題
                         # 檢查是否有未閉合的標記
-                        text = paragraph.text
                         open_count = text.count("{{")
                         close_count = text.count("}}")
                         
@@ -52,6 +80,35 @@ def fix_template_syntax():
             if "{{}}" in paragraph.text:
                 print(f"🔧 修復段落空標記: {paragraph.text}")
                 paragraph.text = paragraph.text.replace("{{}}", "{{gender}}")
+            
+            # 修復段落中新加的浮水印標記
+            text = paragraph.text
+            # 修復 watermark_name_blue 標記
+            if "{{watermark_name_blue}}" in text:
+                # 檢查是否被拆開
+                if "{{watermark_" in text and "name_blue}}" in text and "{{watermark_name_blue}}" not in text:
+                    print(f"🔧 修復段落拆開的標記: watermark_name_blue")
+                    text = text.replace("{{watermark_", "").replace("name_blue}}", "")
+                    text = text.replace("{{", "{{watermark_name_blue}}")
+                    paragraph.text = text
+            
+            # 修復 watermark_company_blue 標記
+            if "{{watermark_company_blue}}" in text:
+                # 檢查是否被拆開
+                if "{{watermark_" in text and "company_blue}}" in text and "{{watermark_company_blue}}" not in text:
+                    print(f"🔧 修復段落拆開的標記: watermark_company_blue")
+                    text = text.replace("{{watermark_", "").replace("company_blue}}", "")
+                    text = text.replace("{{", "{{watermark_company_blue}}")
+                    paragraph.text = text
+            
+            # 修復 PCN 標記
+            if "{{PCN}}" in text:
+                # 檢查是否被拆開
+                if "{{P" in text and "CN}}" in text and "{{PCN}}" not in text:
+                    print(f"🔧 修復段落拆開的標記: PCN")
+                    text = text.replace("{{P", "").replace("CN}}", "")
+                    text = text.replace("{{", "{{PCN}}")
+                    paragraph.text = text
         
         # 儲存修復後的模板
         doc.save(fixed_path)

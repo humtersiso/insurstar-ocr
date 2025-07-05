@@ -17,14 +17,14 @@
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            margin: 2rem auto;
-            padding: 2rem;
-            max-width: 1800px;
+            margin: 1rem auto;
+            padding: 1.5rem;
+            max-width: 1400px;
         }
         
         .header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
         
         .header h1 {
@@ -41,11 +41,15 @@
         .upload-area {
             border: 3px dashed #3498db;
             border-radius: 15px;
-            padding: 3rem;
+            padding: 1.5rem;
             text-align: center;
             background: #f8f9fa;
             transition: all 0.3s ease;
             cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         
         .upload-area:hover {
@@ -59,9 +63,9 @@
         }
         
         .upload-icon {
-            font-size: 4rem;
+            font-size: 3rem;
             color: #3498db;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
         
         .file-input {
@@ -71,10 +75,11 @@
         .btn-primary {
             background: linear-gradient(45deg, #3498db, #2980b9);
             border: none;
-            border-radius: 25px;
-            padding: 12px 30px;
+            border-radius: 20px;
+            padding: 8px 20px;
             font-weight: bold;
             transition: all 0.3s ease;
+            font-size: 0.9rem;
         }
         
         .btn-primary:hover {
@@ -84,19 +89,20 @@
         
         .upload-buttons {
             display: flex;
-            gap: 1rem;
+            gap: 0.5rem;
             justify-content: center;
-            margin-top: 1rem;
+            margin-top: 0.5rem;
         }
         
         .btn-secondary {
             background: linear-gradient(45deg, #6c757d, #5a6268);
             border: none;
-            border-radius: 25px;
-            padding: 12px 30px;
+            border-radius: 20px;
+            padding: 8px 20px;
             font-weight: bold;
             transition: all 0.3s ease;
             color: white;
+            font-size: 0.9rem;
         }
         
         .btn-secondary:hover:not(:disabled) {
@@ -162,8 +168,6 @@
             color: #27ae60;
             font-weight: 500;
         }
-        
-
         
         .alert {
             border-radius: 15px;
@@ -279,8 +283,6 @@
             background: #e3f2fd !important;
         }
         
-
-        
         /* 圖片彈框樣式 */
         .image-modal {
             display: none;
@@ -346,6 +348,383 @@
         #previewImageContainer img {
             background: #fff;
         }
+        
+        /* 要保書預覽樣式 */
+        .preview-placeholder {
+            padding: 1rem;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .preview-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .preview-caption {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        /* 緊湊模式樣式 */
+        .compact-data .data-field {
+            padding: 0.3rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .compact-data .field-label {
+            font-size: 0.85rem;
+        }
+        
+        .compact-data .field-value {
+            font-size: 0.85rem;
+        }
+        
+        .compact-card {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .compact-card h5 {
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        /* 減少間距 */
+        .result-container .row {
+            margin-bottom: 0.5rem;
+        }
+        
+        .result-container .data-card {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* 預覽圖片高度限制 */
+        .preview-image {
+            max-height: 200px;
+            max-width: 100%;
+        }
+        
+        /* 保險表格緊湊化 */
+        .compact-data .insurance-table {
+            font-size: 0.8rem;
+        }
+        
+        .compact-data .insurance-table th,
+        .compact-data .insurance-table td {
+            padding: 4px 6px;
+        }
+        
+        .custom-download-btn {
+            font-size: 1rem;
+            padding: 0.5rem 1.2rem;
+        }
+        .custom-download-btn i {
+            font-size: 1.2em;
+        }
+        .custom-download-btn-sm {
+            font-size: 0.85rem;
+            padding: 0.25rem 0.7rem;
+        }
+        .custom-download-btn-sm i {
+            font-size: 1.1em;
+        }
+        /* 現代卡片樣式 */
+        .modern-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin-bottom: 1.2rem;
+            padding: 1.2rem;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 3px 12px rgba(52, 152, 219, 0.1);
+            transition: all 0.3s ease;
+        }
+        .modern-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.15);
+        }
+        .card-header-modern {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+        .data-field-modern {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .data-field-modern:last-child {
+            border-bottom: none;
+        }
+        .field-label-modern {
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.95rem;
+        }
+        .field-value-modern {
+            color: #27ae60;
+            font-weight: 500;
+            text-align: right;
+            max-width: 60%;
+        }
+
+        /* 簡約卡片樣式 */
+        .minimal-card {
+            background: #ffffff;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border: 1px solid #e9ecef;
+            box-shadow: none;
+        }
+        .card-header-minimal {
+            font-size: 1rem;
+            color: #212529;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .data-field-minimal {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.4rem 0;
+        }
+        .field-label-minimal {
+            font-weight: 400;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        .field-value-minimal {
+            color: #212529;
+            font-weight: 400;
+            text-align: right;
+            max-width: 60%;
+        }
+
+        /* 彩色卡片樣式 */
+        .colorful-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            margin-bottom: 1.2rem;
+            padding: 1.2rem;
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        .card-header-colorful {
+            font-size: 1.1rem;
+            color: white;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .data-field-colorful {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .data-field-colorful:last-child {
+            border-bottom: none;
+        }
+        .field-label-colorful {
+            font-weight: 500;
+            color: rgba(255,255,255,0.9);
+            font-size: 0.95rem;
+        }
+        .field-value-colorful {
+            color: white;
+            font-weight: 600;
+            text-align: right;
+            max-width: 60%;
+        }
+
+        /* 邊框卡片樣式 */
+        .bordered-card {
+            background: #ffffff;
+            border-radius: 10px;
+            margin-bottom: 1.2rem;
+            padding: 1.2rem;
+            border: 2px solid #dee2e6;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .card-header-bordered {
+            font-size: 1.1rem;
+            color: #495057;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 0.5rem;
+        }
+        .data-field-bordered {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid #f8f9fa;
+        }
+        .data-field-bordered:last-child {
+            border-bottom: none;
+        }
+        .field-label-bordered {
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.95rem;
+        }
+        .field-value-bordered {
+            color: #28a745;
+            font-weight: 500;
+            text-align: right;
+            max-width: 60%;
+        }
+
+        /* 漸層卡片樣式 */
+        .gradient-card {
+            background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            border-radius: 15px;
+            margin-bottom: 1.2rem;
+            padding: 1.2rem;
+            box-shadow: 0 4px 15px rgba(255, 154, 158, 0.3);
+        }
+        .card-header-gradient {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+        }
+        .data-field-gradient {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(44, 62, 80, 0.1);
+        }
+        .data-field-gradient:last-child {
+            border-bottom: none;
+        }
+        .field-label-gradient {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.95rem;
+        }
+        .field-value-gradient {
+            color: #34495e;
+            font-weight: 500;
+            text-align: right;
+            max-width: 60%;
+        }
+
+        /* 原始樣式保留作為備用 */
+        .data-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 1.2rem;
+            padding: 1rem 1.2rem;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.05);
+        }
+        .data-section .fw-bold {
+            font-size: 1.08rem;
+            color: #2c3e50;
+            margin-bottom: 0.7rem;
+        }
+
+        /* 移除卡片框線、背景、圓角、陰影等樣式 */
+        .data-section, .modern-card, .minimal-card, .colorful-card, .bordered-card, .gradient-card {
+            background: none !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin-bottom: 0.5rem !important;
+        }
+        .card-header-modern, .card-header-minimal, .card-header-colorful, .card-header-bordered, .card-header-gradient {
+            background: none !important;
+            border-bottom: none !important;
+            font-size: 1.08rem;
+            color: #2c3e50;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+            padding: 0.2rem 0 0.2rem 0.1rem;
+        }
+        .section-content {
+            padding-left: 2.2rem;
+            padding-bottom: 0.5rem;
+        }
+        .data-field-modern, .data-field-minimal, .data-field-colorful, .data-field-bordered, .data-field-gradient {
+            border-bottom: 1px solid #ececec;
+            padding: 0.3rem 0;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .data-field-modern:last-child, .data-field-minimal:last-child, .data-field-colorful:last-child, .data-field-bordered:last-child, .data-field-gradient:last-child {
+            border-bottom: none;
+        }
+        .field-label-modern, .field-label-minimal, .field-label-colorful, .field-label-bordered, .field-label-gradient {
+            font-weight: 500;
+            color: #555;
+            min-width: 6.5em;
+            margin-right: 1.2em;
+        }
+        .field-value-modern, .field-value-minimal, .field-value-colorful, .field-value-bordered, .field-value-gradient {
+            color: #222;
+            font-weight: 400;
+            text-align: left;
+            max-width: 70%;
+            word-break: break-all;
+        }
+        /* 綠色字樣式 */
+        .text-success { color: #27ae60 !important; }
+        .text-danger { color: #c0392b !important; }
+        /* 移除 hover 動畫 */
+        .card-header-modern:hover, .card-header-minimal:hover, .card-header-colorful:hover, .card-header-bordered:hover, .card-header-gradient:hover {
+            background: none !important;
+            color: inherit !important;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+        .data-section:hover, .modern-card:hover, .minimal-card:hover, .colorful-card:hover, .bordered-card:hover, .gradient-card:hover {
+            background: none !important;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+        /* 下載按鈕點擊時不閃爍 */
+        .custom-download-btn-sm:focus, .custom-download-btn-sm:active {
+            outline: none !important;
+            box-shadow: none !important;
+            background: inherit !important;
+            color: inherit !important;
+            border-color: inherit !important;
+        }
+        /* 強力覆蓋 Bootstrap 按鈕 :active/:focus 狀態，防止閃爍 */
+        .btn:active, .btn:focus, .btn:active:focus, .btn-outline-primary:active, .btn-outline-danger:active, .btn-outline-primary:focus, .btn-outline-danger:focus {
+            background: inherit !important;
+            color: inherit !important;
+            border-color: inherit !important;
+            box-shadow: none !important;
+            outline: none !important;
+            transition: none !important;
+        }
     </style>
 </head>
 <body>
@@ -359,21 +738,32 @@
 
             <!-- 上傳區塊 -->
             <div class="row mb-4">
-                <div class="col-md-12">
+                <div class="col-md-8">
                     <div class="upload-area" id="uploadArea">
                         <div class="upload-icon">
                             <i class="fas fa-cloud-upload-alt"></i>
                         </div>
-                        <h4>拖拽檔案到此處或點擊選擇檔案</h4>
-                        <p class="text-muted">支援格式：JPG, PNG, PDF, TIFF, BMP (最大16MB)</p>
+                        <h5>拖拽檔案到此處或點擊選擇檔案</h5>
+                        <p class="text-muted small">支援格式：JPG, PNG, PDF, TIFF, BMP (最大16MB)</p>
                         <input type="file" id="fileInput" class="file-input" accept=".jpg,.jpeg,.png,.pdf,.tiff,.bmp">
                         <div class="upload-buttons">
                             <button class="btn btn-primary" onclick="selectFile()">
                                 <i class="fas fa-folder-open"></i> 選擇檔案
                             </button>
-                            <button class="btn btn-secondary" id="previewButton" onclick="showImagePreview()" disabled>
-                                <i class="fas fa-image"></i> 圖片預覽
-                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="data-card compact-card">
+                        <h5><i class="fas fa-chart-pie"></i> 處理摘要</h5>
+                        <div id="dataSummary">
+                            <div class="text-muted">上傳檔案後顯示摘要</div>
+                        </div>
+                    </div>
+                    <div class="data-card compact-card">
+                        <h5><i class="fas fa-exclamation-triangle"></i> 提醒事項</h5>
+                        <div id="remindersInfo">
+                            <div class="text-muted">上傳檔案後顯示提醒</div>
                         </div>
                     </div>
                 </div>
@@ -390,63 +780,88 @@
 
             <!-- 結果區域 -->
             <div class="result-container" id="resultContainer">
+                <!-- 主要內容區域：提取資料 + 預覽 + 生成按鈕 -->
                 <div class="row">
                     <div class="col-md-8">
                         <div class="data-card">
-                            <h5><i class="fas fa-table"></i> 提取的資料</h5>
-                            <div id="extractedData"></div>
-                        </div>
-                        
-                        <!-- Word 生成按鈕 -->
-                        <!-- <div class="data-card">
-                            <h5><i class="fas fa-file-word"></i> 文件生成</h5>
-                            <div class="d-flex gap-2">
-                                <button class="btn btn-success" id="generateWordButton" onclick="generateWord()" disabled>
-                                    <i class="fas fa-file-word"></i> 生成 Word 檔案
-                                </button>
-                                <button class="btn btn-info" id="downloadWordButton" onclick="downloadWord()" style="display: none;">
-                                    <i class="fas fa-download"></i> 下載 Word 檔案
-                                </button>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="mb-0"><i class="fas fa-table"></i> 提取的資料</h5>
                             </div>
-                            <div id="wordStatus" class="mt-2"></div>
-                        </div> -->
+                            <div id="extractedData" class="compact-data"></div>
+                        </div>
                     </div>
                     <div class="col-md-4">
                         <div class="data-card">
-                            <h5><i class="fas fa-chart-pie"></i> 處理摘要</h5>
-                            <div id="dataSummary"></div>
+                            <h5><i class="fas fa-file-contract"></i> 要保書預覽</h5>
+                            <div id="previewImageContainer" class="text-center">
+                                <div class="preview-placeholder">
+                                    <i class="fas fa-image" style="font-size: 2rem; color: #ccc;"></i>
+                                    <p class="text-muted mt-1 small">上傳檔案後顯示預覽</p>
+                                </div>
+                            </div>
                         </div>
                         
-
-                        
-
-                        
-                        <div class="data-card">
-                            <h5><i class="fas fa-exclamation-triangle"></i> 提醒事項</h5>
-                            <div id="remindersInfo"></div>
+                        <!-- 財產分析書預覽卡片 -->
+                        <div class="data-card mt-3" id="propertyReportPreviewCard">
+                            <h5><i class="fas fa-eye"></i> 財產分析書預覽</h5>
+                            <div id="propertyReportStatus" class="mb-2 text-center text-info" style="font-size:0.95rem;"></div>
+                            <div id="propertyReportPreviewImageContainer" class="text-center" style="margin-top:10px;">
+                                <div id="propertyReportPreviewPlaceholder" class="preview-placeholder">
+                                    <i class="fas fa-image" style="font-size: 2rem; color: #ccc;"></i>
+                                    <p class="text-muted mt-1 small">尚未產生財產分析書預覽，請稍後再試</p>
+                                </div>
+                                <img id="propertyReportPreviewImage" src="" class="preview-image mx-auto d-block" style="display:none;cursor:pointer;" onclick="openImageModal(this.src)">
+                                <div class="preview-caption text-center" id="propertyReportPreviewCaption" style="display:none;">
+                                    <i class="fas fa-search-plus"></i> 點擊放大查看
+                                    </div>
+                                    </div>
+                                </div>
+                        <!-- 財產分析書下載卡片 -->
+                        <div class="data-card mt-3" id="propertyReportDownloadCard">
+                            <h5><i class="fas fa-download"></i> 財產分析書下載</h5>
+                            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                                <button type="button" class="btn btn-outline-primary custom-download-btn-sm" id="downloadWordBtn" onclick="downloadPropertyReport('word', event)" disabled>
+                                    <i class="fas fa-file-word" style="color:#2b579a;"></i> 下載 Word
+                                </button>
+                                <button type="button" class="btn btn-outline-danger custom-download-btn-sm" id="downloadPdfBtn" onclick="downloadPropertyReport('pdf', event)" disabled>
+                                    <i class="fas fa-file-pdf" style="color:#c00;"></i> 下載 PDF
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
+                
+
             </div>
 
-            <!-- 功能特色 -->
-            <div class="feature-list">
+            <!-- 功能特色（移到更下方） -->
+            <div class="feature-list mt-4" style="opacity: 0.8;">
                 <h5><i class="fas fa-star"></i> 系統特色</h5>
-                <div class="feature-item">
-                    <i class="fas fa-eye feature-icon"></i>
-                    <span>高精度OCR文字辨識，支援中文保單</span>
-                </div>
-                <div class="feature-item">
-                    <i class="fas fa-file-word feature-icon"></i>
-                    <span>自動生成Word文件，格式標準化</span>
-                </div>
-                <div class="feature-item">
-                    <i class="fas fa-shield-alt feature-icon"></i>
-                    <span>資料驗證與錯誤檢查</span>
-                </div>
-                <div class="feature-item">
-                    <i class="fas fa-chart-line feature-icon"></i>
-                    <span>處理摘要報告</span>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="feature-item">
+                            <i class="fas fa-eye feature-icon"></i>
+                            <span>高精度OCR文字辨識</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="feature-item">
+                            <i class="fas fa-file-word feature-icon"></i>
+                            <span>自動生成Word文件</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="feature-item">
+                            <i class="fas fa-shield-alt feature-icon"></i>
+                            <span>資料驗證與錯誤檢查</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="feature-item">
+                            <i class="fas fa-chart-line feature-icon"></i>
+                            <span>處理摘要報告</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -467,7 +882,10 @@
         let currentPreviewImageUrl = null;
         let currentOriginalImageUrl = null;
         let currentWordFile = null;
+        let currentAnalysisFile = null;
         let currentFileId = null;
+        let currentPreviewWordFilename = null;
+        let pdfStatusInterval = null;
 
         // DOM元素
         const uploadArea = document.getElementById('uploadArea');
@@ -531,10 +949,27 @@
             currentPreviewImageUrl = null;
             currentOriginalImageUrl = null;
             
-            // 重置預覽按鈕
-            const previewButton = document.getElementById('previewButton');
-            previewButton.disabled = true;
-            previewButton.innerHTML = '<i class="fas fa-image"></i> 圖片預覽';
+            // 重置狀態
+            currentPreviewImageUrl = null;
+            currentOriginalImageUrl = null;
+            
+            // 清空處理摘要和提醒事項
+            const dataSummaryContainer = document.getElementById('dataSummary');
+            const remindersContainer = document.getElementById('remindersInfo');
+            const extractedDataContainer = document.getElementById('extractedData');
+            const previewContainer = document.getElementById('previewImageContainer');
+            
+            if (dataSummaryContainer) dataSummaryContainer.innerHTML = '';
+            if (remindersContainer) remindersContainer.innerHTML = '';
+            if (extractedDataContainer) extractedDataContainer.innerHTML = '';
+            if (previewContainer) previewContainer.innerHTML = '';
+            
+            // 禁用生成財產分析書按鈕
+            const generateAnalysisButton = document.getElementById('generateAnalysisButton');
+            if (generateAnalysisButton) generateAnalysisButton.disabled = true;
+            
+            resetPropertyReportPreview();
+            currentPreviewWordFilename = null;
             
             showProgress();
             uploadFile(file);
@@ -563,6 +998,17 @@
             progressContainer.style.display = 'block';
             resultContainer.style.display = 'none';
             updateProgress(0, '準備上傳檔案...');
+            
+            // 確保在顯示進度時清空所有結果區域
+            const dataSummaryContainer = document.getElementById('dataSummary');
+            const remindersContainer = document.getElementById('remindersInfo');
+            const extractedDataContainer = document.getElementById('extractedData');
+            const previewContainer = document.getElementById('previewImageContainer');
+            
+            if (dataSummaryContainer) dataSummaryContainer.innerHTML = '';
+            if (remindersContainer) remindersContainer.innerHTML = '';
+            if (extractedDataContainer) extractedDataContainer.innerHTML = '';
+            if (previewContainer) previewContainer.innerHTML = '';
         }
 
         // 更新進度
@@ -608,13 +1054,27 @@
             hideProgress();
             displayExtractedData(data.extracted_data);
             displayDataSummary(data.data_summary);
-
             displayRemindersInfo(data.reminders);
-            // 啟用圖片預覽按鈕
-            const previewButton = document.getElementById('previewButton');
-            previewButton.disabled = false;
-            previewButton.innerHTML = '<i class="fas fa-image"></i> 圖片預覽';
+            // 顯示要保書預覽
+            displayPolicyPreview(data.overlay_preview_image_url);
             resultContainer.style.display = 'block';
+            // === 財產分析書下載卡片啟用 ===
+            if (data && data.word_filename) {
+                document.getElementById('downloadWordBtn').disabled = false;
+                if (data.pdf_filename) {
+                    document.getElementById('downloadPdfBtn').disabled = false;
+                }
+                currentPreviewWordFilename = data.word_filename;
+                previewPropertyReport();
+                // PDF 狀態提示
+                if (data.pdf_filename) {
+                    pollPdfStatus(data.pdf_filename);
+                } else {
+                    pollPdfStatus(null);
+                }
+            } else {
+                pollPdfStatus(null);
+            }
         }
 
         // 隱藏進度
@@ -622,38 +1082,10 @@
             progressContainer.style.display = 'none';
         }
 
-        // 顯示圖片預覽
-        function showImagePreview() {
-            if (!currentFile) {
-                showAlert('提示', '尚未有可預覽的圖片，請先上傳檔案', 'info');
-                return;
-            }
-            if (!currentOriginalImageUrl || !currentFileId) {
-                showAlert('提示', '找不到原始圖片路徑或 file_id', 'info');
-                return;
-            }
-            fetch('/api/preview', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ image_path: currentOriginalImageUrl, file_id: currentFileId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.preview_url) {
-                    openImageModal(data.preview_url);
-                } else {
-                    showAlert('錯誤', data.error || '預覽產生失敗', 'danger');
-                }
-            })
-            .catch(error => {
-                showAlert('錯誤', '預覽產生失敗: ' + error.message, 'danger');
-            });
-        }
-
         // 開啟圖片彈框
         function openImageModal(imageUrl) {
             modalImage.src = imageUrl;
-            modalCaption.textContent = '疊加輔助線圖片 - 點擊外部區域或 X 關閉';
+            modalCaption.textContent = '要保書預覽 - 點擊外部區域或 X 關閉';
             imageModal.style.display = 'block';
             document.body.style.overflow = 'hidden'; // 防止背景滾動
         }
@@ -681,75 +1113,99 @@
         // 顯示提取的資料
         function displayExtractedData(data) {
             const container = document.getElementById('extractedData');
+            const selectedStyle = 'modern';
+            // 分區欄位
+            const insuredFields = [
+                'insured_person', 'id_number', 'birth_date', 'gender', 'legal_representative'
+            ];
+            const policyholderFields = [
+                'policyholder', 'policyholder_id', 'policyholder_birth_date', 'policyholder_gender', 'policyholder_legal_representative', 'relationship'
+            ];
+            const otherFields = [
+                'insurance_company', 'vehicle_type', 'license_number', 'total_premium', 'compulsory_insurance_period', 'optional_insurance_period'
+            ];
+            // 欄位標籤
             const fieldLabels = {
                 'insurance_company': '產險公司',
-                'insured_section': '被保險人區塊',
                 'insured_person': '被保險人',
                 'legal_representative': '法人代表人',
                 'id_number': '身分證字號/統編',
                 'birth_date': '出生日期',
                 'gender': '性別',
-                'policyholder_section': '要保人區塊',
                 'policyholder': '要保人',
                 'relationship': '與被保險人關係',
-                'policyholder_legal_representative': '要保人法人代表',
-                'policyholder_gender': '要保人性別',
-                'policyholder_id': '要保人身分證字號',
-                'policyholder_birth_date': '要保人出生日期',
+                'policyholder_legal_representative': '法人代表人',
+                'policyholder_gender': '性別',
+                'policyholder_id': '身分證字號/統編',
+                'policyholder_birth_date': '出生日期',
                 'vehicle_type': '車輛種類',
                 'license_number': '牌照號碼',
-                'coverage_items': '承保內容',
                 'total_premium': '總保險費',
                 'compulsory_insurance_period': '強制險保期',
-                'optional_insurance_period': '任意險保期'
+                'optional_insurance_period': '任意險保期',
+                'coverage_items': '承保內容'
             };
-
-            // 定義欄位顯示順序
-            const fieldOrder = [
-                'insurance_company',
-                'insured_person',
-                'legal_representative',
-                'id_number',
-                'birth_date',
-                'gender',
-                'policyholder',
-                'relationship',
-                'policyholder_legal_representative',
-                'policyholder_gender',
-                'policyholder_id',
-                'policyholder_birth_date',
-                'vehicle_type',
-                'license_number',
-                'total_premium',
-                'compulsory_insurance_period',
-                'optional_insurance_period',
-                'coverage_items'
-            ];
-
-            let html = '';
-            // 按順序顯示主要欄位
-            fieldOrder.forEach(key => {
+            // ICON 對應
+            const sectionIcons = {
+                '被保人資訊': '<i class="fas fa-user"></i>',
+                '要保人資訊': '<i class="fas fa-user-tie"></i>',
+                '其他資訊': '<i class="fas fa-info-circle"></i>',
+                '承保內容': '<i class="fas fa-clipboard-list"></i>'
+            };
+            // 收合狀態追蹤
+            if (!window.sectionCollapseState) window.sectionCollapseState = {};
+            // 將 toggleSectionCollapse 移到全域
+            window.toggleSectionCollapse = function(key) {
+                let collapsed = window.sectionCollapseState[key];
+                if (typeof collapsed === 'undefined') collapsed = true;
+                window.sectionCollapseState[key] = !collapsed;
+                displayExtractedData(window.currentExtractedData);
+            };
+            // 渲染分區
+            function renderSection(title, fields, key) {
+                // 預設展開，點擊立即切換
+                let collapsed = window.sectionCollapseState[key];
+                if (typeof collapsed === 'undefined') collapsed = true;
+                let html = `<div class=\"data-section ${selectedStyle}-card mb-3\">\n` +
+                    `<div class=\"card-header-${selectedStyle} d-flex align-items-center\" style=\"cursor:pointer;user-select:none;\" onclick=\"toggleSectionCollapse('${key}')\">` +
+                    `<span style=\"margin-right:8px;\">${sectionIcons[title] || ''}</span>` +
+                    `<span>${title}</span>` +
+                    `<span class=\"ms-auto\"><i class=\"fas fa-chevron-${collapsed ? 'down' : 'right'}\"></i></span>` +
+                    `</div>`;
+                html += `<div class=\"section-content\" style=\"display:${collapsed ? 'block' : 'none'};transition:all 0.3s;\">`;
+                fields.forEach(key => {
                 if (data.hasOwnProperty(key)) {
-                    const label = fieldLabels[key] || key;
                     let value = data[key] || '未填寫';
-                    // 專門處理 coverage_items
-                    if (key === 'coverage_items') {
-                        value = formatCoverageItems(value);
-                    }
-                    // 判斷是否為「無填寫」
-                    let valueClass = 'field-value';
-                    if (typeof value === 'string' && value.trim() === '無填寫') {
+                        let valueClass = `field-value-${selectedStyle}`;
+                        if (typeof value === 'string' && (value.trim() === '未填寫' || value.trim() === '無填寫')) {
                         valueClass += ' text-danger';
+                        } else {
+                            valueClass += ' text-success';
                     }
-                    html += `
-                        <div class="data-field">
-                            <span class="field-label">${label}:</span>
-                            <span class="${valueClass}">${value}</span>
-                        </div>
-                    `;
-                }
-            });
+                        html += `<div class=\"data-field-${selectedStyle}\"><span class=\"field-label-${selectedStyle}\">${fieldLabels[key] || key}</span><span class=\"${valueClass}\">${value}</span></div>`;
+                    }
+                });
+                html += '</div></div>';
+                return html;
+            }
+            let html = '';
+            html += renderSection('被保人資訊', insuredFields, 'insured');
+            html += renderSection('要保人資訊', policyholderFields, 'policyholder');
+            html += renderSection('其他資訊', otherFields, 'other');
+            // 承保內容（表格）
+            if (data.hasOwnProperty('coverage_items')) {
+                const collapsed = window.sectionCollapseState['coverage'] === false ? false : true;
+                html += `<div class="data-section ${selectedStyle}-card mb-3">
+                    <div class="card-header-${selectedStyle} d-flex align-items-center" style="cursor:pointer;user-select:none;" onclick="toggleSectionCollapse('coverage')">
+                        <span style="margin-right:8px;">${sectionIcons['承保內容']}</span>
+                        <span>承保內容</span>
+                        <span class="ms-auto"><i class="fas fa-chevron-${collapsed ? 'down' : 'right'}"></i></span>
+                    </div>
+                    <div class="section-content" style="display:${collapsed ? 'block' : 'none'};transition:all 0.3s;">${formatCoverageItems(data['coverage_items'])}</div>
+                </div>`;
+            }
             container.innerHTML = html;
+            window.currentExtractedData = data;
         }
 
         // 專門渲染 coverage_items 陣列為表格
@@ -833,10 +1289,6 @@
             `;
         }
 
-
-
-
-
         // 顯示提醒事項
         function displayRemindersInfo(reminders) {
             const container = document.getElementById('remindersInfo');
@@ -869,6 +1321,20 @@
             });
 
             container.innerHTML = html;
+        }
+        
+        // 顯示要保書預覽
+        function displayPolicyPreview(imageUrl) {
+            const container = document.getElementById('previewImageContainer');
+            if (!container) return;
+            // 強制刷新：每次加上時間戳參數
+            const ts = Date.now();
+            container.innerHTML = `
+                <img src="${imageUrl}?t=${ts}" alt="要保書預覽" class="preview-image" onclick="openImageModal('${imageUrl}?t=${ts}')">
+                <div class="preview-caption">
+                    <i class="fas fa-search-plus"></i> 點擊放大查看
+                </div>
+            `;
         }
 
         // 顯示警告
@@ -943,6 +1409,86 @@
             });
         }
 
+        // 生成財產分析書功能
+        function generatePropertyAnalysis() {
+            if (!processingResult || !processingResult.extracted_data) {
+                showAlert('錯誤', '沒有可用的處理結果', 'danger');
+                return;
+            }
+
+            // 檢查 extracted_data 是否為空或無效
+            const extractedData = processingResult.extracted_data;
+            if (!extractedData || Object.keys(extractedData).length === 0) {
+                showAlert('錯誤', '沒有可用的提取資料，請重新上傳檔案', 'danger');
+                return;
+            }
+
+            const generateAnalysisButton = document.getElementById('generateAnalysisButton');
+            const analysisStatus = document.getElementById('analysisStatus');
+
+            // 禁用按鈕並顯示載入狀態
+            generateAnalysisButton.disabled = true;
+            generateAnalysisButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 生成中...';
+            analysisStatus.innerHTML = '<div class="text-info"><i class="fas fa-info-circle"></i> 正在生成財產分析書...</div>';
+
+            // 發送請求到後端
+            fetch('/api/generate-property-analysis', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    extracted_data: extractedData
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    currentAnalysisFile = data.analysis_filename;
+                    analysisStatus.innerHTML = `
+                        <div class="text-success">
+                            <i class="fas fa-check-circle"></i> 財產分析書生成成功！
+                            <br><small>檔案名稱: ${data.analysis_filename}</small>
+                        </div>
+                    `;
+                    
+                    // 切換到預覽狀態
+                    showAnalysisPreview();
+                } else {
+                    throw new Error(data.error || '生成失敗');
+                }
+            })
+            .catch(error => {
+                console.error('財產分析書生成錯誤:', error);
+                analysisStatus.innerHTML = `
+                    <div class="text-danger">
+                        <i class="fas fa-times-circle"></i> 生成失敗: ${error.message}
+                    </div>
+                `;
+                generateAnalysisButton.disabled = false;
+                generateAnalysisButton.innerHTML = '<i class="fas fa-file-word"></i> 重新生成財產分析書';
+            });
+        }
+
+        // 下載財產分析書功能
+        function downloadAnalysis() {
+            if (!currentAnalysisFile) {
+                showAlert('錯誤', '沒有可下載的財產分析書', 'danger');
+                return;
+            }
+
+            // 建立下載連結
+            const downloadUrl = `/download/${currentAnalysisFile}`;
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = currentAnalysisFile;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showAlert('成功', '財產分析書下載已開始', 'success');
+        }
+
         // Word 下載功能
         function downloadWord() {
             if (!currentWordFile) {
@@ -961,6 +1507,132 @@
 
             showAlert('成功', 'Word 檔案下載已開始', 'success');
         }
+
+        // 財產分析書預覽功能
+        function previewPropertyReport() {
+            if (!processingResult || !processingResult.word_filename) {
+                showAlert('錯誤', '財產分析書尚未產生', 'danger');
+                return;
+            }
+            const thisPreviewWordFilename = processingResult.word_filename;
+            fetch('/api/preview', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ filename: thisPreviewWordFilename })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (currentPreviewWordFilename !== thisPreviewWordFilename) return;
+                const img = document.getElementById('propertyReportPreviewImage');
+                const placeholder = document.getElementById('propertyReportPreviewPlaceholder');
+                const caption = document.getElementById('propertyReportPreviewCaption');
+                if (data.preview_url) {
+                    img.src = data.preview_url + '?t=' + Date.now();
+                    img.style.display = 'block';
+                    caption.style.display = 'block';
+                    placeholder.style.display = 'none';
+                } else {
+                    img.style.display = 'none';
+                    img.src = '';
+                    caption.style.display = 'none';
+                    placeholder.style.display = 'block';
+                }
+            })
+            .catch(() => {
+                if (currentPreviewWordFilename !== thisPreviewWordFilename) return;
+                const img = document.getElementById('propertyReportPreviewImage');
+                const placeholder = document.getElementById('propertyReportPreviewPlaceholder');
+                const caption = document.getElementById('propertyReportPreviewCaption');
+                if (img) {
+                    img.style.display = 'none';
+                    img.src = '';
+                }
+                if (caption) caption.style.display = 'none';
+                if (placeholder) placeholder.style.display = 'block';
+            });
+        }
+
+        // 財產分析書下載功能
+        function downloadPropertyReport(type, event) {
+            if (event) event.preventDefault();
+            if (!processingResult || !processingResult.word_filename) {
+                showAlert('錯誤', '財產分析書尚未產生', 'danger');
+                return;
+            }
+            let filename = (type === 'pdf' && processingResult.pdf_filename)
+                ? processingResult.pdf_filename
+                : processingResult.word_filename;
+            // 用隱藏 a 標籤下載，不開新分頁
+            const link = document.createElement('a');
+            link.href = '/download/' + filename;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // 更新財產分析書生成成功後的顯示
+        function showAnalysisPreview() {
+            const generateState = document.getElementById('analysisGenerateState');
+            const previewState = document.getElementById('analysisPreviewState');
+            
+            // 隱藏生成狀態，顯示預覽狀態
+            generateState.style.display = 'none';
+            previewState.style.display = 'block';
+        }
+
+        function resetPropertyReportPreview() {
+            // 清空預覽圖
+            const img = document.getElementById('propertyReportPreviewImage');
+            const placeholder = document.getElementById('propertyReportPreviewPlaceholder');
+            const caption = document.getElementById('propertyReportPreviewCaption');
+            if (img) {
+                img.style.display = 'none';
+                img.src = '';
+            }
+            if (caption) caption.style.display = 'none';
+            if (placeholder) placeholder.style.display = 'block';
+            // 禁用下載按鈕
+            const downloadWordBtn = document.getElementById('downloadWordBtn');
+            if (downloadWordBtn) downloadWordBtn.disabled = true;
+            currentPreviewWordFilename = null;
+        }
+
+        function pollPdfStatus(pdfFilename) {
+            clearInterval(pdfStatusInterval);
+            const statusDiv = document.getElementById('propertyReportStatus');
+            if (!pdfFilename) {
+                statusDiv.textContent = '';
+                return;
+            }
+            statusDiv.textContent = 'PDF 產生中...';
+            pdfStatusInterval = setInterval(() => {
+                fetch('/download/' + pdfFilename, { method: 'HEAD' })
+                    .then(res => {
+                        if (res.ok) {
+                            statusDiv.textContent = 'PDF 產生完成，可供預覽/下載';
+                            clearInterval(pdfStatusInterval);
+                        } else {
+                            statusDiv.textContent = 'PDF 產生中...';
+                        }
+                    })
+                    .catch(() => {
+                        statusDiv.textContent = 'PDF 產生失敗';
+                        clearInterval(pdfStatusInterval);
+                    });
+            }, 1500);
+        }
+
+        // 樣式切換函數
+        function changeCardStyle() {
+            const currentData = window.currentExtractedData;
+            if (currentData) {
+                displayExtractedData(currentData);
+            }
+        }
+        
+        // 儲存當前提取的資料
+        window.currentExtractedData = null;
     </script>
 </body>
 </html> 

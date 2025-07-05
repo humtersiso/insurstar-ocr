@@ -26,6 +26,9 @@ class DataProcessor:
     def format_amount(self, amount: str) -> str:
         if not amount:
             return ""
+        # 先移除所有空白字符
+        amount = re.sub(r'\s+', '', amount)
+        # 移除所有非數字字符，包括逗號
         cleaned = re.sub(r'[^\d]', '', amount)
         if cleaned:
             try:
@@ -76,7 +79,6 @@ class DataProcessor:
         processed_data = {}
         field_processors = {
             'license_number': self.format_policy_number,
-            'total_premium': self.format_amount,
             'birth_date': self.format_date,
             'policyholder_birth_date': self.format_date,
             'id_number': self.format_id_number,
@@ -89,6 +91,9 @@ class DataProcessor:
                 processed_data[field] = value
             elif field in field_processors:
                 processed_data[field] = field_processors[field](value)
+            elif field == 'total_premium':
+                # total_premium 直接使用原始值，不進行任何處理
+                processed_data[field] = value
             else:
                 processed_data[field] = self.clean_text(value) if isinstance(value, str) and value else value
         for field, value in processed_data.items():
